@@ -1,0 +1,635 @@
+/* =========================================
+🎨 Root Color Variables
+========================================= */
+:root {
+  --color-bg: #f9fdf9;
+  --color-primary: #3E8E41;
+  --color-primary-dark: #2a4d51;
+  --color-text: #555;
+  --color-border: #e0e0e0;
+  --color-hover: #e8f5e9;
+}
+
+/* =========================================
+🌐 Base + Global Layout
+========================================= */
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Firefox & IE scrollbar */
+.page-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* =========================================
+📑 Page Layout
+========================================= */
+.layout-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.page-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+/* =========================================
+🧭 Sidebar Navigation
+========================================= */
+.sidenav {
+  background-color: var(--color-bg);
+  border-right: 1px solid var(--color-border);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.3s;
+}
+
+.user-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.user-info.collapsed {
+  align-items: center;
+}
+
+.user-avatar {
+  background-color: var(--color-primary) !important;
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.user-details {
+  margin-top: 0.5rem;
+}
+
+.user-name {
+  font-weight: 500;
+  color: var(--color-primary-dark);
+}
+
+.user-role {
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+.sidenav .ant-menu {
+  border-right: none;
+  flex: 1;
+}
+
+.sidenav .ant-menu-item {
+  font-weight: 500;
+  color: var(--color-primary-dark);
+}
+
+.sidenav .ant-menu-item-selected,
+.sidenav .ant-menu-item:hover {
+  background-color: var(--color-hover) !important;
+  color: var(--color-primary-dark) !important;
+}
+
+.sidenav a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* =========================================
+🧢 Header
+========================================= */
+.header {
+  flex-shrink: 0;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background-color: #fff;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.header .toggle-button {
+  font-size: 1.2rem;
+  color: var(--color-primary-dark);
+}
+
+.header .header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.notification-button {
+  background-color: var(--color-bg);
+  color: var(--color-primary-dark);
+  border: 1px solid var(--color-primary-dark);
+  box-shadow: none;
+}
+
+.user-email {
+  color: var(--color-primary-dark);
+  font-weight: 500;
+}
+
+/* =========================================
+🔒 Login Page
+========================================= */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-image: url('./assets/loginBg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.login-card {
+  background-color: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.login-header h2 {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.login-header p {
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  color: var(--color-primary-dark);
+  font-weight: 500;
+}
+
+.login-button {
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-button:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* =========================================
+❌ 404 Not Found
+========================================= */
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 70vh;
+  text-align: center;
+}
+
+.not-found-icon {
+  font-size: 4rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.not-found-title {
+  font-size: 2rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.not-found-text {
+  font-size: 1rem;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+}
+
+/* =========================================
+🏠 Dashboard
+========================================= */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dashboard-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dashboard-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+  flex: 1;
+  min-width: 250px;
+}
+
+.op-card {
+  border-left: 4px solid var(--color-primary);
+}
+
+.dashboard-card .ant-card-head-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  position: relative;
+  padding-bottom: 0.4rem;
+}
+
+.dashboard-card .ant-card-head-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 30%;
+  height: 3px;
+  background-color: var(--color-primary);
+  border-radius: 2px;
+}
+
+.list-card .ant-list-item {
+  padding: 0.5rem 0;
+}
+
+.quick-actions-card .quick-action-btn {
+  margin-bottom: 0.5rem;
+  background-color: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary-dark);
+}
+
+.quick-actions-card .quick-action-btn:hover {
+  background-color: var(--color-primary-dark);
+  border: 1px solid var(--color-primary);
+}
+
+/* =========================================
+📋 Patients Page
+========================================= */
+.patients-page {
+  padding: 1rem;
+}
+
+.page-heading {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.patients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.patients-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sort-dropdown {
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: var(--color-bg);
+  color: var(--color-primary-dark);
+  outline: none;
+}
+
+/* Grid view layout */
+.patients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Patient card */
+.patient-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s ease;
+}
+
+.patient-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.patient-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.patient-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.patient-info-row svg {
+  font-size: 1rem;
+  color: var(--color-primary-dark);
+  margin-top: 2px;
+}
+
+.visit-description {
+  color: #555;
+  font-size: 0.9rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Table styling */
+.patients-table .ant-table {
+  background: #fff;
+  border: 1px solid var(--color-border);
+}
+
+.patients-table .ant-table-thead > tr > th {
+  background-color: var(--color-hover);
+  color: var(--color-primary-dark);
+  font-weight: 500;
+}
+
+/* Loading Skeletons */
+.skeleton-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.patient-card-skeleton {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-weight: 500;
+}
+
+.add-patient-form {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.add-patient-form .ant-form-item {
+  margin-bottom: 0.8rem;
+}
+
+/* ========== Patient Detail Styling ========== */
+
+.patient-detail-page {
+  padding: 32px;
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+.back-button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  opacity: 0.9;
+}
+
+.patient-detail-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: none;
+  background-color: #fff;
+}
+
+.patient-detail-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.patient-tabs .ant-tabs-tab {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.patient-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--color-primary);
+}
+
+.custom-descriptions .ant-descriptions-item-label {
+  background-color: #fafafa;
+  font-weight: 500;
+  color: #555;
+}
+
+.custom-descriptions .ant-descriptions-item-content {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .patient-detail-page {
+    padding: 16px;
+  }
+
+  .patient-detail-title {
+    font-size: 18px;
+  }
+
+  .custom-descriptions .ant-descriptions-item-label,
+  .custom-descriptions .ant-descriptions-item-content {
+    font-size: 14px;
+  }
+}
+
+/* src/pages/op.css */
+.op-container {
+  padding: 32px;
+  background-color: var(--background-color);
+  min-height: 100vh;
+}
+
+.op-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.op-card {
+  border-radius: var(--border-radius);
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+}
+
+.op-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.complaint {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.diagnosis {
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.op-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.ant-input-affix-wrapper {
+  max-width: 400px;
+  border-radius: var(--border-radius);
+}
+
+.ant-btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  border-radius: 5px;
+}
+
+.op-details-container {
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: var(--bg-color);
+}
+
+.op-details-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  background-color: white;
+}
+
+.back-btn {
+  margin-bottom: 16px;
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+}
+
+.back-btn:hover {
+  background-color: var(--primary-hover-color);
+  color: white;
+}
+
+.op-tabs .ant-tabs-tab {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.patient-op-list {
+  padding: 20px;
+}
+
+.op-list-heading {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--primary-text, #333);
+}
+
+.op-card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.op-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+  background-color: var(--card-bg, #fff);
+}
+
+.op-card:hover {
+  transform: translateY(-4px);
+}
