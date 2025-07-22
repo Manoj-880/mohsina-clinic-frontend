@@ -7,6 +7,7 @@ import {
   MedicineBoxOutlined,
   FileTextOutlined,
   FileDoneOutlined,
+  RedoOutlined
 } from "@ant-design/icons";
 
 const { Item } = Menu;
@@ -62,6 +63,9 @@ const SideNav = ({ isOpen }) => {
         </Item>
         <Item key="/documents" icon={<FileTextOutlined />}>
           <Link to="/documents">Documents</Link>
+        </Item>
+        <Item key="/follow-up" icon={<RedoOutlined />}>
+          <Link to="/follow-up">Follow Up</Link>
         </Item>
       </Menu>
     </div>

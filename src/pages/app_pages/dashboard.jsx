@@ -51,49 +51,6 @@ const Dashboard = () => {
                 >
                     <AddPatientPopup onClose={() => setShowAddPatientPopup(false)} />
             </Modal>
-                {patientsData.length > 0 ? <p style={{padding: 0, fontSize: 18, margin:0, fontWeight: "bold", color: 'var(--color-text)'}}>Today's Patients</p>: <></>}
-            <div className="dashboard-row">
-                {loading ? (
-                    <>
-                        {[...Array(3)].map((_, index) => (
-                            <Card key={index} className="dashboard-card patient-card">
-                                <Skeleton active />
-                            </Card>
-                        ))}
-                    </>
-                ) : (
-                    patientsData
-                        .map((patient) => (
-                            <Card
-                                key={patient.id}
-                                className="dashboard-card patient-card"
-                                size="small"
-                                title={
-                                    <div className="patient-title">
-                                        <span style={{ marginRight: "0.5rem" }}>{patient.name}</span>
-                                        {patient.isNew && <Tag color="green">NEW</Tag>}
-                                    </div>
-                                }
-                            >
-                                {!patient.isNew && (
-                                    <>
-                                        <div className="last-visited">
-                                            Last Visited: {patient.lastVisited}
-                                        </div>
-                                        <div className="visit-description">
-                                            {patient.lastVisitDescription}
-                                        </div>
-                                    </>
-                                )}
-                                {patient.isNew && (
-                                    <div className="new-patient-note">
-                                        This is a new patient appointment.
-                                    </div>
-                                )}
-                            </Card>
-                        ))
-                )}
-            </div>
             <p style={{padding: 0, fontSize: 18, margin:0, fontWeight: "bold", color: 'var(--color-text)'}}>Admin Controls</p>
             <div className="dashboard-row">
                 {/* Medicines */}
@@ -124,16 +81,57 @@ const Dashboard = () => {
                     + Add New Patient
                 </Button>
                 <Button block className="quick-action-btn">
-                    + Add OP Entry
-                </Button>
-                <Button block className="quick-action-btn">
-                    + Medicine Billing
+                    + Add FollowUp
                 </Button>
                 <Button block className="quick-action-btn">
                     + Upload Document
                 </Button>
                 </Card>
             </div>
+            {patientsData.length > 0 ? <p style={{padding: 0, fontSize: 18, margin:0, fontWeight: "bold", color: 'var(--color-text)'}}>Today's Patients</p>: <></>}
+            <div className="dashboard-row">
+                {loading ? (
+                    <>
+                        {[...Array(3)].map((_, index) => (
+                            <Card key={index} className="dashboard-card patient-card">
+                                <Skeleton active />
+                            </Card>
+                        ))}
+                    </>
+                ) : (
+                    patientsData
+                        .map((patient) => (
+                            <Card
+                                key={patient.id}
+                                className="dashboard-card patient-card"
+                                size="small"
+                                title={
+                                    <div className="patient-title">
+                                        <span style={{ marginRight: "0.5rem" }}>{patient.name}</span>
+                                        {patient.isNew && <Tag color="green">NEW</Tag>}
+                                    </div>
+                                }
+                            >
+                                {!patient.isNew && (
+                                    <>
+                                        <div className="last-visited" style={{color: "var(--color-text)", fontSize: "0.875rem"}}>
+                                            <span style={{fontWeight: "bold", color: "var(--color-primary-dark)", fontSize: "0.9rem"}}>Last Visited:</span> {patient.lastVisited}
+                                        </div>
+                                        <div className="visit-description" style={{color: "var(--color-text)", fontSize: "0.875rem"}}>
+                                            {patient.lastVisitDescription}
+                                        </div>
+                                    </>
+                                )}
+                                {patient.isNew && (
+                                    <div className="new-patient-note">
+                                        This is a new patient appointment.
+                                    </div>
+                                )}
+                            </Card>
+                        ))
+                )}
+            </div>
+            
         </div>
     );
 };

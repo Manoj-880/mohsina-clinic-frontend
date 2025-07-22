@@ -31,7 +31,7 @@ const PatientDetails = () => {
     }
 
     return (
-        <div className="patient-detail-page" style={{ padding: 20 }}>
+        <div className="patient-detail-page">
         <Button
             icon={<LeftOutlined />}
             onClick={() => navigate(-1)}

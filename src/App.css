@@ -322,9 +322,9 @@
 /* =========================================
 📋 Patients Page
 ========================================= */
-.patients-page {
+/* .patients-page {
   padding: 1rem;
-}
+} */
 
 .page-heading {
   font-size: 1.4rem;
@@ -455,8 +455,7 @@
 /* ========== Patient Detail Styling ========== */
 
 .patient-detail-page {
-  padding: 32px;
-  background-color: var(--color-bg);
+  /* padding: 32px; */
   min-height: 100vh;
 }
 
@@ -521,7 +520,7 @@
 
 /* src/pages/op.css */
 .op-container {
-  padding: 32px;
+  /* padding: 32px; */
   background-color: var(--background-color);
   min-height: 100vh;
 }

@@ -10,6 +10,7 @@ import Documents from "../app_pages/documents";
 import PatientDetails from "../../components/app_components/patientDetails";
 import OpDetails from "../../components/app_components/opDetails";
 import PatientOpList from "../../components/app_components/patientOpList";
+import FollowUp from "../app_pages/followUp";
 
 const MainPage = () => {
   const [isSidenavOpen, setIsSidenavOpen] = useState(true);
@@ -43,6 +44,7 @@ const MainPage = () => {
             <Route path="/patients/:id" element={<PatientDetails />} />
             <Route path="/op/patient-op-list/:patientId" element={<PatientOpList />} />
             <Route path="/op/:opId" element={<OpDetails />} />
+            <Route path="/follow-up" element={<FollowUp />} />
             {/* Add other routes as needed */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
