@@ -1,148 +1,241 @@
-import React from "react";
-import { Form, Input, Button, Select, DatePicker, Row, Col } from "antd";
+import React, { useState } from "react";
+import {
+    Form,
+    Input,
+    Button,
+    Select,
+    DatePicker,
+    Row,
+    Col,
+    Steps,
+    message,
+} from "antd";
 import dayjs from "dayjs";
 
 const { Option } = Select;
+const { Step } = Steps;
 
 const AddPatientPopup = ({ onClose }) => {
     const [form] = Form.useForm();
+    const [currentStep, setCurrentStep] = useState(0);
+
+    const stepFieldNames = [
+        ["name", "mobileNumber"],
+        [
+            "age", "gender", "maritalStatus",
+            "occupation", "education", "religion", "monthlyIncome", "address",
+        ],
+        [
+            ["appearance", "physicalBuilt"],
+            ["appearance", "skin"],
+            ["appearance", "hair"],
+            ["digestion", "appetite"],
+            ["digestion", "diet"],
+            ["digestion", "cravings"],
+            ["elimination", "stool"],
+        ],
+        [
+            "chiefComplaint",
+            "historyOfChiefComplaint",
+            "pastHistory",
+            "familyHistory",
+            "dateOfCase",
+            "doctor",
+        ],
+    ];
+
+    const next = () => {
+        form
+            .validateFields(stepFieldNames[currentStep])
+            .then(() => setCurrentStep((prev) => prev + 1))
+            .catch(() => {});
+    };
+
+    const prev = () => {
+        setCurrentStep((prev) => prev - 1);
+    };
 
     const handleFinish = (values) => {
         console.log("New Patient:", values);
+        message.success("Patient added successfully!");
         form.resetFields();
         onClose();
     };
 
+    const stepContent = [
+        // Step 0: Basic Info
+        <>
+            <Form.Item name="name" rules={[{ required: true, message: "Enter name" }]}>
+                <Input placeholder="Full Name *" />
+            </Form.Item>
+            <Form.Item name="mobileNumber" rules={[{ required: true, message: "Enter mobile number" }]}>
+                <Input placeholder="Mobile Number *" />
+            </Form.Item>
+        </>,
+
+        // Step 1: Demographics
+        <>
+            <Row gutter={12}>
+                <Col span={8}>
+                    <Form.Item name="age" rules={[{ required: true, message: "Enter age" }]}>
+                        <Input type="number" placeholder="Age *" />
+                    </Form.Item>
+                </Col>
+                <Col span={8}>
+                    <Form.Item name="gender" rules={[{ required: true, message: "Select gender" }]}>
+                        <Select placeholder="Gender *">
+                            <Option value="Male">Male</Option>
+                            <Option value="Female">Female</Option>
+                            <Option value="Other">Other</Option>
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={8}>
+                    <Form.Item name="maritalStatus">
+                        <Select placeholder="Marital Status">
+                            <Option value="Single">Single</Option>
+                            <Option value="Married">Married</Option>
+                            <Option value="Divorced">Divorced</Option>
+                            <Option value="Widowed">Widowed</Option>
+                        </Select>
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Form.Item name="occupation">
+                <Input placeholder="Occupation" />
+            </Form.Item>
+            <Form.Item name="education">
+                <Input placeholder="Education" />
+            </Form.Item>
+            <Row gutter={12}>
+                <Col span={12}>
+                    <Form.Item name="religion">
+                        <Input placeholder="Religion" />
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item name="monthlyIncome">
+                        <Input placeholder="Monthly Income" />
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Form.Item name="address">
+                <Input.TextArea placeholder="Address" rows={2} />
+            </Form.Item>
+        </>,
+
+        // Step 2: Patient as Person
+        <>
+            <Form.Item name={["appearance", "physicalBuilt"]}>
+                <Input placeholder="Physical Built" />
+            </Form.Item>
+            <Form.Item name={["appearance", "skin"]}>
+                <Input placeholder="Skin Type" />
+            </Form.Item>
+            <Form.Item name={["appearance", "hair"]}>
+                <Input placeholder="Hair Type" />
+            </Form.Item>
+            <Form.Item name={["digestion", "appetite"]}>
+                <Input placeholder="Appetite" />
+            </Form.Item>
+            <Form.Item name={["digestion", "diet"]}>
+                <Input placeholder="Diet" />
+            </Form.Item>
+            <Form.Item name={["digestion", "cravings"]}>
+                <Input placeholder="Cravings" />
+            </Form.Item>
+            <Form.Item name={["elimination", "stool"]}>
+                <Input placeholder="Stool" />
+            </Form.Item>
+        </>,
+
+        // Step 3: Health History
+        <>
+            <Form.Item name="chiefComplaint">
+                <Input.TextArea placeholder="Chief Complaint" />
+            </Form.Item>
+            <Form.Item name="historyOfChiefComplaint">
+                <Input.TextArea placeholder="History of Chief Complaint" />
+            </Form.Item>
+            <Form.Item name="pastHistory">
+                <Input.TextArea placeholder="Past History" />
+            </Form.Item>
+            <Form.Item name="familyHistory">
+                <Input.TextArea placeholder="Family History" />
+            </Form.Item>
+            <Row gutter={12}>
+                <Col span={12}>
+                    <Form.Item
+                        name="dateOfCase"
+                        rules={[{ required: true, message: "Select case date" }]}
+                    >
+                        <DatePicker
+                            style={{ width: "100%" }}
+                            placeholder="Date of Case *"
+                            defaultValue={dayjs()}
+                            format="YYYY-MM-DD"
+                            disabledDate={(current) => current && current > dayjs()}
+                        />
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item name="doctor" initialValue="Dr. Mohasina">
+                        <Input disabled />
+                    </Form.Item>
+                </Col>
+            </Row>
+        </>,
+    ];
+
     return (
-        <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleFinish}
-        className="add-patient-form"
-        >
-        {/* Name */}
-        <Form.Item
-            name="name"
-            rules={[{ required: true, message: "Please enter the name" }]}
-        >
-            <Input placeholder="Name *" />
-        </Form.Item>
+        <>
+            <Steps current={currentStep} size="small" style={{ marginBottom: 24 }}>
+                <Step title="Basic" />
+                <Step title="Demographics" />
+                <Step title="Profile" />
+                <Step title="Medical" />
+            </Steps>
 
-        {/* Mobile Number */}
-        <Form.Item
-            name="mobileNumber"
-            rules={[{ required: true, message: "Please enter mobile number" }]}
-        >
-            <Input placeholder="Mobile Number *" />
-        </Form.Item>
-
-        {/* Age, Gender, Marital Status */}
-        <Row gutter={12}>
-            <Col span={8}>
-            <Form.Item
-                name="age"
-                rules={[{ required: true, message: "Enter age" }]}
+            <Form
+                form={form}
+                layout="vertical"
+                onFinish={handleFinish}
+                className="add-patient-form"
+                initialValues={{
+                    appearance: {},
+                    digestion: {},
+                    elimination: {},
+                    dateOfCase: dayjs(),
+                    doctor: "Dr. Mohasina",
+                }}
             >
-                <Input type="number" placeholder="Age *" />
-            </Form.Item>
-            </Col>
-            <Col span={8}>
-            <Form.Item
-                name="gender"
-                rules={[{ required: true, message: "Select gender" }]}
-            >
-                <Select placeholder="Gender *">
-                <Option value="Male">Male</Option>
-                <Option value="Female">Female</Option>
-                </Select>
-            </Form.Item>
-            </Col>
-            {/* <Col span={8}>
-            <Form.Item name="maritalStatus">
-                <Input placeholder="Marital Status" />
-            </Form.Item>
-            </Col> */}
-            <Col span={8}>
-            <Form.Item
-                name="maritalStatus"
-                rules={[{message: "Select marital status" }]}
-            >
-                <Select placeholder="Marital Status *">
-                <Option value="Single">Single</Option>
-                <Option value="Married">Married</Option>
-                </Select>
-            </Form.Item>
-            </Col>
-        </Row>
+                {stepContent.map((content, index) => (
+                    <div key={index} style={{ display: index === currentStep ? "block" : "none" }}>
+                        {content}
+                    </div>
+                ))}
 
-        {/* Occupation */}
-        <Form.Item name="occupation">
-            <Input placeholder="Occupation" />
-        </Form.Item>
-
-        {/* Education */}
-        <Form.Item name="education">
-            <Input placeholder="Education" />
-        </Form.Item>
-
-        {/* Religion, Monthly Income */}
-        <Row gutter={12}>
-            <Col span={12}>
-            <Form.Item name="religion">
-                <Input placeholder="Religion" />
-            </Form.Item>
-            </Col>
-            <Col span={12}>
-            <Form.Item name="monthlyIncome">
-                <Input placeholder="Monthly Income" />
-            </Form.Item>
-            </Col>
-        </Row>
-
-        {/* Address */}
-        <Form.Item name="address">
-            <Input.TextArea placeholder="Address" rows={2} />
-        </Form.Item>
-
-        {/* Date of Case & Doctor */}
-        <Row gutter={12}>
-            <Col span={12}>
-            <Form.Item
-                name="dateOfCase"
-                rules={[{ required: true, message: "Select date" }]}
-            >
-                <DatePicker
-                placeholder="Date of Case *"
-                style={{ width: "100%" }}
-                initialValue={dayjs()}
-                disabledDate={(current) => current && current < dayjs().startOf("day")}
-                />
-            </Form.Item>
-            </Col>
-            <Col span={12}>
-            <Form.Item name="doctor" initialValue="Dr. Mohasina">
-                <Input disabled />
-            </Form.Item>
-            </Col>
-        </Row>
-
-        {/* Health issue */}
-        <Form.Item name="lastVisitDescription">
-            <Input.TextArea placeholder="Health Issue" rows={2} />
-        </Form.Item>
-
-        {/* Submit Button */}
-        <Form.Item>
-            <Button
-            type="primary"
-            htmlType="submit"
-            block
-            style={{ backgroundColor: "var(--color-primary)", border: "none" }}
-            >
-            Add Patient
-            </Button>
-        </Form.Item>
-        </Form>
+                <Form.Item style={{ marginTop: 24 }}>
+                    <Row justify="space-between">
+                        {currentStep > 0 && (
+                            <Button onClick={prev} style={{ marginRight: 8 }}>
+                                Previous
+                            </Button>
+                        )}
+                        {currentStep < stepContent.length - 1 && (
+                            <Button type="primary" onClick={next}>
+                                Next
+                            </Button>
+                        )}
+                        {currentStep === stepContent.length - 1 && (
+                            <Button type="primary" htmlType="submit">
+                                Submit
+                            </Button>
+                        )}
+                    </Row>
+                </Form.Item>
+            </Form>
+        </>
     );
 };
 

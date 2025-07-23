@@ -4,20 +4,40 @@ import { Link, useLocation } from "react-router-dom";
 import {
   AppstoreOutlined,
   UserOutlined,
-  MedicineBoxOutlined,
-  FileTextOutlined,
   FileDoneOutlined,
+  FileTextOutlined,
   RedoOutlined
 } from "@ant-design/icons";
-
-const { Item } = Menu;
 
 const SideNav = ({ isOpen }) => {
   const location = useLocation();
 
-  // Get user from localStorage
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
+
+  // Define menu items as per AntD v5+
+  const menuItems = [
+    {
+      key: "/",
+      icon: <AppstoreOutlined />,
+      label: <Link to="/">Dashboard</Link>,
+    },
+    {
+      key: "/patients",
+      icon: <UserOutlined />,
+      label: <Link to="/patients">Patients</Link>,
+    },
+    {
+      key: "/follow-up",
+      icon: <RedoOutlined />,
+      label: <Link to="/follow-up">Follow Up</Link>,
+    },
+    {
+      key: "/documents",
+      icon: <FileTextOutlined />,
+      label: <Link to="/documents">Documents</Link>,
+    },
+  ];
 
   return (
     <div
@@ -26,22 +46,15 @@ const SideNav = ({ isOpen }) => {
         width: isOpen ? 220 : 80,
       }}
     >
-      {/* User info */}
+      {/* User Info */}
       <div className={`user-info ${!isOpen ? "collapsed" : ""}`}>
-        <Avatar
-          size={40}
-          className="user-avatar"
-        >
+        <Avatar size={40} className="user-avatar">
           {user?.email ? user.email[0].toUpperCase() : "U"}
         </Avatar>
         {isOpen && (
           <div className="user-details">
-            <div className="user-name">
-              {user?.displayName || "Unknown User"}
-            </div>
-            <div className="user-role">
-              {user?.role || "Staff"}
-            </div>
+            <div className="user-name">{user?.displayName || "Unknown User"}</div>
+            <div className="user-role">{user?.role || "Staff"}</div>
           </div>
         )}
       </div>
@@ -51,23 +64,8 @@ const SideNav = ({ isOpen }) => {
         mode="inline"
         selectedKeys={[location.pathname]}
         inlineCollapsed={!isOpen}
-      >
-        <Item key="/" icon={<AppstoreOutlined />}>
-          <Link to="/">Dashboard</Link>
-        </Item>
-        <Item key="/patients" icon={<UserOutlined />}>
-          <Link to="/patients">Patients</Link>
-        </Item>
-        <Item key="/op" icon={<FileDoneOutlined />}>
-          <Link to="/op">OP</Link>
-        </Item>
-        <Item key="/documents" icon={<FileTextOutlined />}>
-          <Link to="/documents">Documents</Link>
-        </Item>
-        <Item key="/follow-up" icon={<RedoOutlined />}>
-          <Link to="/follow-up">Follow Up</Link>
-        </Item>
-      </Menu>
+        items={menuItems}
+      />
     </div>
   );
 };

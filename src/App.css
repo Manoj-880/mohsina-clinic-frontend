@@ -33,6 +33,10 @@
   scrollbar-width: none;
 }
 
+.ant-card-head-title{
+  color: var(--color-primary);
+}
+
 /* =========================================
 📑 Page Layout
 ========================================= */
@@ -631,4 +635,33 @@
 
 .op-card:hover {
   transform: translateY(-4px);
+}
+
+
+/* .followup-wrapper {
+  padding: 2rem;
+  background-color: var(--color-bg);
+  min-height: 100vh;
+} */
+
+.followup-title {
+  color: var(--color-primary-dark);
+  font-size: 24px;
+  margin-bottom: 1rem;
+}
+
+/* Customizing Ant Design Table */
+.followup-table .ant-table-thead > tr > th {
+  background-color: var(--color-hover);
+  color: var(--color-primary-dark);
+  font-weight: 500;
+}
+
+.followup-table .ant-table-tbody > tr:hover > td {
+  background-color: var(--color-hover);
+}
+
+.followup-table .ant-table {
+  border: 1px solid var(--color-border);
+  background: #fff;
 }

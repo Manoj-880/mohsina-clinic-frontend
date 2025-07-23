@@ -5,11 +5,8 @@ import Header from "../../components/global/header";
 import Dashboard from "../app_pages/dashboard";
 import NotFoundPage from "../app_pages/notFoundPage";
 import Patients from "../app_pages/patients";
-import OP from "../app_pages/op";
 import Documents from "../app_pages/documents";
 import PatientDetails from "../../components/app_components/patientDetails";
-import OpDetails from "../../components/app_components/opDetails";
-import PatientOpList from "../../components/app_components/patientOpList";
 import FollowUp from "../app_pages/followUp";
 
 const MainPage = () => {
@@ -39,11 +36,8 @@ const MainPage = () => {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/patients" element={<Patients />} />
-            <Route path="/op" element={<OP />} />
             <Route path="/documents" element={<Documents />} />
             <Route path="/patients/:id" element={<PatientDetails />} />
-            <Route path="/op/patient-op-list/:patientId" element={<PatientOpList />} />
-            <Route path="/op/:opId" element={<OpDetails />} />
             <Route path="/follow-up" element={<FollowUp />} />
             {/* Add other routes as needed */}
             <Route path="*" element={<NotFoundPage />} />
