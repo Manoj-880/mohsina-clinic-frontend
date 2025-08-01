@@ -134,11 +134,11 @@
 ========================================= */
 .header {
   flex-shrink: 0;
-  height: 60px;
+  height: 5.3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem 0 1rem;
   border-bottom: 1px solid var(--color-border);
   background-color: #fff;
 }
@@ -284,10 +284,6 @@
   min-width: 250px;
 }
 
-.op-card {
-  border-left: 4px solid var(--color-primary);
-}
-
 .dashboard-card .ant-card-head-title {
   font-size: 1.2rem;
   font-weight: 600;
@@ -307,21 +303,24 @@
   border-radius: 2px;
 }
 
-.list-card .ant-list-item {
-  padding: 0.5rem 0;
+.quick-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
 }
 
-.quick-actions-card .quick-action-btn {
-  margin-bottom: 0.5rem;
+.quick-action-btn {
   background-color: var(--color-primary);
   color: #fff;
   border: 1px solid var(--color-primary-dark);
 }
 
-.quick-actions-card .quick-action-btn:hover {
+.quick-action-btn:hover {
   background-color: var(--color-primary-dark);
   border: 1px solid var(--color-primary);
 }
+
 
 /* =========================================
 📋 Patients Page
@@ -664,4 +663,54 @@
 .followup-table .ant-table {
   border: 1px solid var(--color-border);
   background: #fff;
+}
+
+.add-prescription-btn{
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.profile-container {
+  padding: 24px;
+  display: flex;
+  gap: 1rem;
+}
+
+.profile-title {
+  color: var(--color-primary-dark);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.profile-card {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+
+.profile-button {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.profile-button:hover {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.documents-container {
+  padding: 10px;
+}
+
+.doc-title {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.doc-actions {
+  display: flex;
+  align-items: center;
 }

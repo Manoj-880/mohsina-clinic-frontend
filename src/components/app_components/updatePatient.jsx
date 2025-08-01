@@ -1,17 +1,80 @@
 import React, { useState } from 'react';
 import { Input, Select, Button, Steps, Row, Col, DatePicker } from 'antd';
-import { addPatient } from '../../api/patients_api';
+import { updatePatient } from '../../api/patients_api';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 
 const { Step } = Steps;
 
-const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
+const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
     const [current, setCurrent] = useState(0);
-    const [formValues, setFormValues] = useState({
-        doctor: 'Mohasina',
-        dateOfCase: dayjs()
+    const [formValues, setFormValues] = useState(() => {
+        const p = patient || {};
+        const prelim = (p.priliminaryDetails && p.priliminaryDetails[0]) || {};
+        const menstrual = p.patientAsPerson?.menstrualHistory?.menses || {};
+        const concomitance = p.patientAsPerson?.menstrualHistory?.concomitance || {};
+
+        return {
+            name: prelim.name || "",
+            age: prelim.age || "",
+            gender: prelim.gender || "",
+            occupation: prelim.occupation || "",
+            education: prelim.education || "",
+            maritalStatus: prelim.maritalStatus || "",
+            religion: prelim.religion || "",
+            monthlyIncome: prelim.monthlyIncome || "",
+            address: prelim.address || "",
+            doctor: prelim.doctor || "Mohasina",
+            dateOfCase: prelim.dateOfCase ? dayjs(prelim.dateOfCase) : dayjs(),
+            mobileNumber: prelim.mobileNumber || "",
+
+            chiefComplaint: p.chiefComplaint || "",
+            historyOfChiefComplaint: p.historyOfChiefComplaint || "",
+            pastHistory: p.pastHistory || "",
+            familyHistory: p.familyHistory || "",
+
+            physicalBuilt: p.patientAsPerson?.appearance?.physicalBuilt || "",
+            skin: p.patientAsPerson?.appearance?.skin || "",
+            hair: p.patientAsPerson?.appearance?.hair || "",
+            nail: p.patientAsPerson?.appearance?.nail || "",
+            face: p.patientAsPerson?.appearance?.face || "",
+
+            appetite: p.patientAsPerson?.digestion?.appetite || "",
+            diet: p.patientAsPerson?.digestion?.diet || "",
+            diseases: p.patientAsPerson?.digestion?.diseases || "",
+            cravings: p.patientAsPerson?.digestion?.cravings || "",
+            aversions: p.patientAsPerson?.digestion?.aversions || "",
+            thirst: p.patientAsPerson?.digestion?.thirst || "",
+
+            stool: p.patientAsPerson?.elimination?.stool || "",
+            perspiration: p.patientAsPerson?.elimination?.perspiration || "",
+            urine: p.patientAsPerson?.elimination?.urine || "",
+
+            menarche: p.patientAsPerson?.menstrualHistory?.menarche || "",
+            LMP: p.patientAsPerson?.menstrualHistory?.LMP || "",
+            menopause: p.patientAsPerson?.menstrualHistory?.menopause || "",
+            leucorrhea: p.patientAsPerson?.menstrualHistory?.leucorrhea || "",
+
+            mensesDuration: menstrual.duration || "",
+            mensesCycle: menstrual.cycle || "",
+            mensesFlow: menstrual.flow || "",
+            mensesColor: menstrual.color || "",
+            mensesCloths: menstrual.cloths || "",
+            mensesOdour: menstrual.odour || "",
+            mensesStains: menstrual.stains || "",
+
+            concomitanceBefore: concomitance.before || "",
+            concomitanceDuring: concomitance.during || "",
+            concomitanceAfter: concomitance.after || "",
+
+            sexualFunctions: p.patientAsPerson?.sexualFunctions || "",
+
+            lifeSpace: p.lifeSpace || "",
+            thermals: p.thermals || "",
+            diagnosis: p.diagnosis || ""
+        };
     });
+
 
     const updateField = (field, value) => {
         setFormValues(prev => ({ ...prev, [field]: value }));
@@ -90,7 +153,7 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
         };
 
         const user = JSON.parse(localStorage.getItem('user'));
-        const response = await addPatient(payload, user.secretKey);
+        const response = await updatePatient(patient.priliminaryDetails[0].patientId, payload, user.secretKey);
 
         if (response.success) {
             toast.success(response.message);
@@ -224,21 +287,21 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
 
     return (
         <div>
-        <Steps current={current} style={{ marginBottom: 24 }}>
-            {steps.map(item => (<Step key={item.title} title={item.title} />))}
-        </Steps>
-        <div style={{ marginBottom: 24 }}>
-            {steps.map((step, index) => (
-            <div key={index} style={{ display: current === index ? 'block' : 'none' }}>{step.content}</div>
-            ))}
-        </div>
-        <div>
-            {current > 0 && <Button onClick={prev} style={{ marginRight: 8 }}>Previous</Button>}
-            {current < steps.length - 1 && <Button type="primary" onClick={next}>Next</Button>}
-            {current === steps.length - 1 && <Button type="primary" onClick={handleSubmit}>Submit</Button>}
-        </div>
+            <Steps current={current} style={{ marginBottom: 24 }}>
+                {steps.map(item => (<Step key={item.title} title={item.title} />))}
+            </Steps>
+            <div style={{ marginBottom: 24 }}>
+                {steps.map((step, index) => (
+                <div key={index} style={{ display: current === index ? 'block' : 'none' }}>{step.content}</div>
+                ))}
+            </div>
+            <div>
+                {current > 0 && <Button onClick={prev} style={{ marginRight: 8 }}>Previous</Button>}
+                {current < steps.length - 1 && <Button type="primary" onClick={next}>Next</Button>}
+                {current === steps.length - 1 && <Button type="primary" onClick={handleSubmit}>Submit</Button>}
+            </div>
         </div>
     );
-};
+}
 
-export default PatientRegistrationForm;
+export default UpdatePatient

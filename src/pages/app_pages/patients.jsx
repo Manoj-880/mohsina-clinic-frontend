@@ -42,25 +42,23 @@ const Patients = () => {
 
   const fetchPatients = async () => {
     try {
+      const localUser = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
-      const response = await getAllPatients();
+      const response = await getAllPatients(localUser?.secretKey);
+      console.log(response.data);
       if (response) {
-        setPatientsData(response);
+        setPatientsData(response.data);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching patients:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Add isNew tag based on missing prescription and followUps
   const filteredPatients = patientsData
     .map((patient) => {
-      // const pd = patient.preliminaryData || {};
-      const hasPrescription = !!patient.prescription;
-      const hasFollowUps = !!patient.followUps;
-      const isNew = !hasPrescription && !hasFollowUps;
+      const isNew = patient.isNew;
 
       return {
         ...patient,
@@ -68,8 +66,8 @@ const Patients = () => {
       };
     })
     .filter((p) => {
-      const name = p.preliminaryData?.name || "";
-      const mobile = p.preliminaryData?.mobileNumber || "";
+      const name = p.name || "";
+      const mobile = p.mobileNumber || "";
       return (
         name.toLowerCase().includes(searchText.toLowerCase()) ||
         mobile.includes(searchText)
@@ -79,15 +77,15 @@ const Patients = () => {
   const columns = [
     {
       title: "Name",
-      dataIndex: "preliminaryData",
+      dataIndex: "name",
       key: "name",
-      render: (data, record) => (
+      render: (text, record) => (
         <a
           onClick={() =>
             navigate(`/patients/${record.patientId}`, { state: record })
           }
         >
-          {data?.name}
+          {text}
           {record.isNew && (
             <Tag color="green" style={{ marginLeft: 8 }}>
               NEW
@@ -98,23 +96,19 @@ const Patients = () => {
     },
     {
       title: "Age",
-      dataIndex: "preliminaryData",
+      dataIndex: "age",
       key: "age",
-      render: (data) => data?.age,
-      sorter: (a, b) =>
-        (a.preliminaryData?.age || 0) - (b.preliminaryData?.age || 0),
+      sorter: (a, b) => (parseInt(a.age) || 0) - (parseInt(b.age) || 0),
     },
     {
       title: "Gender",
-      dataIndex: "preliminaryData",
+      dataIndex: "gender",
       key: "gender",
-      render: (data) => data?.gender,
     },
     {
       title: "Doctor",
-      dataIndex: "preliminaryData",
+      dataIndex: "doctor",
       key: "doctor",
-      render: (data) => data?.doctor,
     },
   ];
 
@@ -125,9 +119,9 @@ const Patients = () => {
         open={isAddModalVisible}
         onCancel={() => setIsAddModalVisible(false)}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
       >
-        <AddPatientPopup onClose={() => setIsAddModalVisible(false)} />
+        <AddPatientPopup onFinish={() => setIsAddModalVisible(false)} fetchPatients={fetchPatients} />
       </Modal>
 
       <div className="patients-header">
@@ -139,7 +133,6 @@ const Patients = () => {
             onChange={(e) => setSearchText(e.target.value)}
             style={{ width: 200 }}
           />
-
           <div className="view-toggle">
             <Tooltip title="Grid View">
               <Button
@@ -156,7 +149,6 @@ const Patients = () => {
               />
             </Tooltip>
           </div>
-
           <Button
             type="primary"
             onClick={() => setIsAddModalVisible(true)}
@@ -179,65 +171,58 @@ const Patients = () => {
         <>
           {viewMode === "grid" ? (
             <div className="patients-grid">
-              {filteredPatients.map((patient) => {
-                const pd = patient.preliminaryData;
-                return (
-                  <Card
-                    key={patient.patientId}
-                    className="patient-card"
-                    onClick={() =>
-                      navigate(`/patients/${patient.patientId}`, {
-                        state: patient,
-                      })
-                    }
-                    style={{ cursor: "pointer" }}
-                    title={
-                      <div className="patient-title">
-                        <span>
-                          <UserOutlined style={{ marginRight: 6 }} />
-                          {pd?.name}
-                        </span>
-                        {patient.isNew && (
-                          <Tag color="green" style={{ marginLeft: 8 }}>
-                            NEW
-                          </Tag>
-                        )}
-                      </div>
-                    }
-                  >
-                    <div className="patient-info-row">
-                      <PhoneOutlined />
-                      <span>{pd?.mobileNumber || "N/A"}</span>
-                    </div>
-                    <div className="patient-info-row">
-                      {pd?.gender === "Male" ? (
-                        <ManOutlined />
-                      ) : (
-                        <WomanOutlined />
-                      )}
+              {filteredPatients.map((patient) => (
+                <Card
+                  key={patient.patientId}
+                  className="patient-card"
+                  onClick={() =>
+                    navigate(`/patients/${patient.patientId}`, {
+                      state: patient,
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                  title={
+                    <div className="patient-title">
                       <span>
-                        {pd?.gender}, {pd?.age} yrs
+                        <UserOutlined style={{ marginRight: 6 }} />
+                        {patient.name}
                       </span>
+                      {patient.isNew && (
+                        <Tag color="green" style={{ marginLeft: 8 }}>
+                          NEW
+                        </Tag>
+                      )}
                     </div>
+                  }
+                >
+                  <div className="patient-info-row">
+                    <PhoneOutlined />
+                    <span>{patient.mobileNumber || "N/A"}</span>
+                  </div>
+                  <div className="patient-info-row">
+                    {patient.gender === "Male" ? <ManOutlined /> : <WomanOutlined />}
+                    <span>
+                      {patient.gender}, {patient.age} yrs
+                    </span>
+                  </div>
+                  <div className="patient-info-row">
+                    <CalendarOutlined />
+                    <span>Doctor: {patient.doctor}</span>
+                  </div>
+                  {patient.followUps && (
                     <div className="patient-info-row">
-                      <CalendarOutlined />
-                      <span>Doctor: {pd?.doctor}</span>
+                      <ClockCircleOutlined />
+                      <span>Follow-up: {patient.followUps}</span>
                     </div>
-                    {patient.followUps && (
-                      <div className="patient-info-row">
-                        <ClockCircleOutlined />
-                        <span>Follow-up: {patient.followUps}</span>
-                      </div>
-                    )}
-                    {patient.chiefComplaint && (
-                      <div className="patient-info-row visit-description">
-                        <FileTextOutlined />
-                        <span>{patient.chiefComplaint}</span>
-                      </div>
-                    )}
-                  </Card>
-                );
-              })}
+                  )}
+                  {patient.chiefComplaint && (
+                    <div className="patient-info-row visit-description">
+                      <FileTextOutlined />
+                      <span>{patient.chiefComplaint}</span>
+                    </div>
+                  )}
+                </Card>
+              ))}
             </div>
           ) : (
             <Table

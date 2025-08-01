@@ -1,16 +1,16 @@
 import React from "react";
 import { Menu, Avatar } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   AppstoreOutlined,
   UserOutlined,
-  FileDoneOutlined,
   FileTextOutlined,
   RedoOutlined
 } from "@ant-design/icons";
 
 const SideNav = ({ isOpen }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
@@ -53,8 +53,8 @@ const SideNav = ({ isOpen }) => {
         </Avatar>
         {isOpen && (
           <div className="user-details">
-            <div className="user-name">{user?.displayName || "Unknown User"}</div>
-            <div className="user-role">{user?.role || "Staff"}</div>
+            <div className="user-name">{user?.name || "Unknown User"}</div>
+            <div className="user-role" style={{textDecoration:"underline", cursor:"pointer"}} onClick={() => navigate('/profile')}>view profile</div>
           </div>
         )}
       </div>

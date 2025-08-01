@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import login_api from '../../api/login_api';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,15 +15,21 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); 
     let data = {
       email, password
     };
-    console.log(data);
-    
-    localStorage.setItem("user", JSON.stringify(data));
-    navigate('/');
+    let response = await login_api.login(data);
+    if(response.success){
+      // message.success(response.message);
+      toast.success(response.message);
+      localStorage.setItem("user", JSON.stringify(response.data));
+      navigate('/');
+    } else {
+      console.log(response);
+      toast.error(response.message);
+    }
   };
 
   return (

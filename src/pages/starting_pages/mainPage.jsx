@@ -8,6 +8,7 @@ import Patients from "../app_pages/patients";
 import Documents from "../app_pages/documents";
 import PatientDetails from "../../components/app_components/patientDetails";
 import FollowUp from "../app_pages/followUp";
+import Profile from "../app_pages/profile";
 
 const MainPage = () => {
   const [isSidenavOpen, setIsSidenavOpen] = useState(true);
@@ -16,6 +17,10 @@ const MainPage = () => {
   const toggleSidenav = () => {
     setIsSidenavOpen(!isSidenavOpen);
   };
+
+  useEffect(() => {
+    document.title = "Dr. Mohasina's homeopathy clinic";
+  }, [])
 
   useEffect(() => {
     // Check if user exists in localStorage
@@ -39,6 +44,7 @@ const MainPage = () => {
             <Route path="/documents" element={<Documents />} />
             <Route path="/patients/:id" element={<PatientDetails />} />
             <Route path="/follow-up" element={<FollowUp />} />
+            <Route path="/profile" element={<Profile />} />
             {/* Add other routes as needed */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
