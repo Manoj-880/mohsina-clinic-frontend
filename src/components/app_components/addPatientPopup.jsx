@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Select, Button, Steps, Row, Col, DatePicker } from 'antd';
 import { addPatient } from '../../api/patients_api';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
+import TextArea from 'antd/es/input/TextArea';
 
 const { Step } = Steps;
 
 const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
     const [current, setCurrent] = useState(0);
+    let [user, setUser] = useState({});
     const [formValues, setFormValues] = useState({
-        doctor: 'Mohasina',
+        doctor: user?.name,
         dateOfCase: dayjs()
     });
+
+    useEffect(() => {
+        getLocalData();
+    }, [])
+    
+    const getLocalData = async () => {
+        const userData = await JSON.parse(localStorage.getItem('user'));
+        setUser(userData);
+    }
 
     const updateField = (field, value) => {
         setFormValues(prev => ({ ...prev, [field]: value }));
@@ -21,48 +32,59 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
     const prev = () => setCurrent(current - 1);
 
     const handleSubmit = async () => {
-        try {
+    try {
         const payload = {
             priliminaryDetails: {
-            name: formValues.name,
-            age: formValues.age,
-            gender: formValues.gender,
-            occupation: formValues.occupation,
-            education: formValues.education,
-            maritalStatus: formValues.maritalStatus,
-            religion: formValues.religion,
-            monthlyIncome: formValues.monthlyIncome,
-            address: formValues.address,
-            doctor: formValues.doctor,
-            dateOfCase: formValues.dateOfCase,
-            mobileNumber: formValues.mobileNumber,
+                name: formValues.name,
+                age: formValues.age,
+                gender: formValues.gender,
+                occupation: formValues.occupation,
+                education: formValues.education,
+                maritalStatus: formValues.maritalStatus,
+                religion: formValues.religion,
+                monthlyIncome: formValues.monthlyIncome,
+                address: formValues.address,
+                doctor: formValues.doctor,
+                dateOfCase: formValues.dateOfCase,
+                mobileNumber: formValues.mobileNumber,
             },
             chiefComplaint: formValues.chiefComplaint,
             historyOfChiefComplaint: formValues.historyOfChiefComplaint,
             pastHistory: formValues.pastHistory,
             familyHistory: formValues.familyHistory,
             patientAsPerson: {
-            appearance: {
-                physicalBuilt: formValues.physicalBuilt,
-                skin: formValues.skin,
-                hair: formValues.hair,
-                nail: formValues.nail,
-                face: formValues.face
+                appearance: {
+                    physicalBuilt: formValues.physicalBuilt,
+                    skin: formValues.skin,
+                    hair: formValues.hair,
+                    nail: formValues.nail,
+                    face: formValues.face
+                },
+                digestion: {
+                    appetite: formValues.appetite,
+                    diet: formValues.diet,
+                    diseases: formValues.diseases,
+                    cravings: formValues.cravings,
+                    aversions: formValues.aversions,
+                    thirst: formValues.thirst
+                },
+                elimination: {
+                    stool: formValues.stool,
+                    perspiration: formValues.perspiration,
+                    urine: formValues.urine
+                }
             },
-            digestion: {
-                appetite: formValues.appetite,
-                diet: formValues.diet,
-                diseases: formValues.diseases,
-                cravings: formValues.cravings,
-                aversions: formValues.aversions,
-                thirst: formValues.thirst
-            },
-            elimination: {
-                stool: formValues.stool,
-                perspiration: formValues.perspiration,
-                urine: formValues.urine
-            },
-            menstrualHistory: {
+            lifeSpace: formValues.lifeSpace
+        };
+
+        // Conditionally add optional fields
+        const hasMenstrualHistory = formValues.menarche || formValues.LMP || formValues.menopause || formValues.leucorrhea || 
+            formValues.mensesDuration || formValues.mensesCycle || formValues.mensesFlow || formValues.mensesColor || 
+            formValues.mensesCloths || formValues.mensesOdour || formValues.mensesStains || 
+            formValues.concomitanceBefore || formValues.concomitanceDuring || formValues.concomitanceAfter;
+
+        if (hasMenstrualHistory) {
+            payload.patientAsPerson.menstrualHistory = {
                 menarche: formValues.menarche,
                 LMP: formValues.LMP,
                 menopause: formValues.menopause,
@@ -77,19 +99,26 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
                     stains: formValues.mensesStains,
                 },
                 concomitance: {
-                before: formValues.concomitanceBefore,
-                during: formValues.concomitanceDuring,
-                after: formValues.concomitanceAfter,
-                },
-            },
-            sexualFunctions: formValues.sexualFunctions
-            },
-            lifeSpace: formValues.lifeSpace,
-            thermals: formValues.thermals,
-            diagnosis: formValues.diagnosis
-        };
+                    before: formValues.concomitanceBefore,
+                    during: formValues.concomitanceDuring,
+                    after: formValues.concomitanceAfter,
+                }
+            };
+        }
 
-        const user = JSON.parse(localStorage.getItem('user'));
+        if (formValues.sexualFunctions) {
+            payload.patientAsPerson.sexualFunctions = formValues.sexualFunctions;
+        }
+
+        if (formValues.thermals) {
+            payload.thermals = formValues.thermals;
+        }
+
+        if (formValues.diagnosis) {
+            payload.diagnosis = formValues.diagnosis;
+        }
+
+        // const user = JSON.parse(localStorage.getItem('user'));
         const response = await addPatient(payload, user.secretKey);
 
         if (response.success) {
@@ -100,11 +129,11 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
         } else {
             toast.error(response.message);
         }
-        } catch (err) {
+    } catch (err) {
         console.log(err);
         toast.error("Please fill all required fields.");
-        }
-    };
+    }
+};
 
     const steps = [
         {
@@ -213,11 +242,13 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
         {
         title: 'Other Details',
         content: (
+            <>
+            <Col style={{marginBottom:"20px"}}><TextArea placeholder="Life Space" value={formValues.lifeSpace} onChange={e => updateField('lifeSpace', e.target.value)} /></Col>
             <Row gutter={16}>
-            <Col span={8}><Input placeholder="Life Space" value={formValues.lifeSpace} onChange={e => updateField('lifeSpace', e.target.value)} /></Col>
             <Col span={8}><Input placeholder="Thermals" value={formValues.thermals} onChange={e => updateField('thermals', e.target.value)} /></Col>
             <Col span={8}><Input placeholder="Diagnosis" value={formValues.diagnosis} onChange={e => updateField('diagnosis', e.target.value)} /></Col>
             </Row>
+            </>
         )
         }
     ];

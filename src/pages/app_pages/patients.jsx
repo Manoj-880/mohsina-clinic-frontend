@@ -28,7 +28,7 @@ import { getAllPatients } from "../../api/patients_api";
 const { Search } = Input;
 
 const Patients = () => {
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState("list");
   const [searchText, setSearchText] = useState("");
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [patientsData, setPatientsData] = useState([]);
@@ -134,18 +134,18 @@ const Patients = () => {
             style={{ width: 200 }}
           />
           <div className="view-toggle">
-            <Tooltip title="Grid View">
-              <Button
-                type={viewMode === "grid" ? "primary" : "default"}
-                icon={<AppstoreOutlined />}
-                onClick={() => setViewMode("grid")}
-              />
-            </Tooltip>
             <Tooltip title="List View">
               <Button
                 type={viewMode === "list" ? "primary" : "default"}
                 icon={<UnorderedListOutlined />}
                 onClick={() => setViewMode("list")}
+              />
+            </Tooltip>
+            <Tooltip title="Grid View">
+              <Button
+                type={viewMode === "grid" ? "primary" : "default"}
+                icon={<AppstoreOutlined />}
+                onClick={() => setViewMode("grid")}
               />
             </Tooltip>
           </div>

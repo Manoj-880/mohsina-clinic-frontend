@@ -4,10 +4,12 @@ import AddPatientPopup from "../../components/app_components/addPatientPopup";
 import { getDashboardPatientData } from "../../api/dashboard_api";
 import AddFollowUp from "../../components/app_components/addFollowUp";
 import { useNavigate } from "react-router-dom";
+import AddDocument from "../../components/app_components/addDocument";
 
 const Dashboard = () => {
     const [showAddPatientPopup, setShowAddPatientPopup] = useState(false);
     const [showAddFollowUpPopup, setShowAddFollowUpPopup] = useState(false);
+    const [showDocumentPopup, setShowDocumentPopup] = useState(false);
     const [patientsData, setPatientsData] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -55,6 +57,15 @@ const Dashboard = () => {
             >
                 <AddFollowUp onClose={() => setShowAddFollowUpPopup(false)} fetchFollowups={fetchPatientData} />
             </Modal>
+            <Modal
+                title="Upload Document"
+                open={showDocumentPopup}
+                onCancel={() => setShowDocumentPopup(false)}
+                footer={null}
+                destroyOnHidden
+            >
+                <AddDocument onClose={() => setShowDocumentPopup(false)} fetchDocuments={fetchPatientData} />
+            </Modal>
 
             <p style={{padding: 0, fontSize: 18, margin:0, fontWeight: "bold", color: 'var(--color-text)', display:'block'}}>Admin Controls</p>
             <div className="dashboard-row quick-actions-row">
@@ -64,7 +75,7 @@ const Dashboard = () => {
                 <Button className="quick-action-btn" onClick={() => setShowAddFollowUpPopup(true)}>
                     + Add FollowUp
                 </Button>
-                <Button className="quick-action-btn">
+                <Button className="quick-action-btn" onClick={() => setShowDocumentPopup(true)}>
                     + Upload Document
                 </Button>
             </div>
@@ -82,7 +93,7 @@ const Dashboard = () => {
                     </p>
                 ) : (
                     <>
-                        <p style={{ padding: 0, fontSize: 18, margin: 0, fontWeight: "bold", color: 'var(--color-text)' }}>
+                        <p style={{ padding: 0, fontSize: 18, margin: 0, fontWeight: "bold", color: 'var(--color-text)', width: "100%" }}>
                             Today's Patients
                         </p>
                         {patientsData.map((patient) => (
