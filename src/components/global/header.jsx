@@ -3,6 +3,7 @@ import React from "react";
 import { Button, Tooltip, Badge } from "antd";
 import { MenuOutlined, BellOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/branding.png";
 
 const Header = ({ isSidenavOpen, onToggle }) => {
     const user = JSON.parse(localStorage.getItem("user")) || {};
@@ -14,6 +15,7 @@ const Header = ({ isSidenavOpen, onToggle }) => {
     };
 
     const handleProfile = () => {
+        console.log("clicked")
         navigate("/profile")
     }
 
@@ -28,7 +30,8 @@ const Header = ({ isSidenavOpen, onToggle }) => {
             className="toggle-button"
             />
             <div className="header-title">
-            DR.MOHASINA'S Holistic Health Care
+                <img src={logo} alt="my Logo" width={'10%'}  style={{marginRight:"0.2rem"}}/>
+                DR.MOHASINA'S Holistic Health Care
             </div>
         </div>
 
