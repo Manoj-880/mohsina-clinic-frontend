@@ -11,7 +11,7 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
     const [current, setCurrent] = useState(0);
     let [user, setUser] = useState({});
     const [formValues, setFormValues] = useState({
-        doctor: user?.name,
+        doctor: "Mohasina",
         dateOfCase: dayjs()
     });
 
@@ -117,6 +117,8 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
         if (formValues.diagnosis) {
             payload.diagnosis = formValues.diagnosis;
         }
+
+        console.log(payload)
 
         // const user = JSON.parse(localStorage.getItem('user'));
         const response = await addPatient(payload, user.secretKey);

@@ -46,7 +46,7 @@ const Dashboard = () => {
                 footer={null}
                 destroyOnClose
             >
-                <AddPatientPopup onClose={() => setShowAddPatientPopup(false)} />
+                <AddPatientPopup onFinish={() => setShowAddPatientPopup(false)} fetchPatients={fetchPatientData} />
             </Modal>
             <Modal
                 title="Add Follow-Up"
