@@ -120,8 +120,12 @@ const Patients = () => {
         onCancel={() => setIsAddModalVisible(false)}
         footer={null}
         destroyOnHidden
+        maskClosable={false}
       >
-        <AddPatientPopup onFinish={() => setIsAddModalVisible(false)} fetchPatients={fetchPatients} />
+        <AddPatientPopup
+          onFinish={() => setIsAddModalVisible(false)}
+          fetchPatients={fetchPatients}
+        />
       </Modal>
 
       <div className="patients-header">
@@ -200,7 +204,11 @@ const Patients = () => {
                     <span>{patient.mobileNumber || "N/A"}</span>
                   </div>
                   <div className="patient-info-row">
-                    {patient.gender === "Male" ? <ManOutlined /> : <WomanOutlined />}
+                    {patient.gender === "Male" ? (
+                      <ManOutlined />
+                    ) : (
+                      <WomanOutlined />
+                    )}
                     <span>
                       {patient.gender}, {patient.age} yrs
                     </span>
