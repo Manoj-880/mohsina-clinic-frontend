@@ -93,6 +93,9 @@ const PatientDetails = () => {
         return <Empty description="No patient data provided." />;
     }
 
+    const followUpsList = Array.isArray(patient.followUps) ? patient.followUps.slice() : [];
+    const totalFollowups = followUpsList.length;
+
     return (
         <div className="patient-detail-page">
             <Modal
@@ -220,6 +223,8 @@ const PatientDetails = () => {
                     <TabPane tab="Life Space" key="4">
                         <Descriptions column={1} bordered>
                             <Descriptions.Item label="Life Space">{patient.lifeSpace || "—"}</Descriptions.Item>
+                            <Descriptions.Item label="Sleep">{patient.sleep || "—"}</Descriptions.Item>
+                            <Descriptions.Item label="Dreams">{patient.dreams || "—"}</Descriptions.Item>
                         </Descriptions>
                     </TabPane>
 
@@ -242,11 +247,11 @@ const PatientDetails = () => {
                     </TabPane>
 
                     <TabPane tab="Follow Ups" key="8">
-                        {Array.isArray(patient.followUps) && patient.followUps.length > 0 ? (
-                            patient.followUps.slice().map((fup, index) => (
+                        {followUpsList.length > 0 ? (
+                            followUpsList.map((fup, index) => (
                                 <Card
                                     key={index}
-                                    title={`Follow Up #${index + 1}`}
+                                    title={`Follow Up #${totalFollowups - index}`}
                                     style={{ marginBottom: "1rem" }}
                                     extra={
                                         (!fup.followupNotes || fup.followupNotes.trim() === "") && (

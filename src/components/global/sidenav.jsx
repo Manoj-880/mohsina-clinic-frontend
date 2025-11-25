@@ -5,7 +5,8 @@ import {
   AppstoreOutlined,
   UserOutlined,
   FileTextOutlined,
-  RedoOutlined
+  RedoOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons";
 
 const SideNav = ({ isOpen }) => {
@@ -31,6 +32,11 @@ const SideNav = ({ isOpen }) => {
       key: "/follow-up",
       icon: <RedoOutlined />,
       label: <Link to="/follow-up">Follow Up</Link>,
+    },
+    {
+      key: "/doctors",
+      icon: <SolutionOutlined />,
+      label: <Link to="/doctors">Doctors</Link>,
     },
     {
       key: "/documents",

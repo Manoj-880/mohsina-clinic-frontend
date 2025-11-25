@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { getAllPatients } from "../../api/patients_api";
-import { Select, DatePicker, Button, Form } from "antd";
+import { Select, DatePicker, Button, Form, Input } from "antd";
 import { addFollowUp } from "../../api/followUps";
 import { toast } from "react-toastify";
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 const AddFollowUp = ({ onClose, fetchFollowups, patientId }) => {
   const [patients, setPatients] = useState([]);
@@ -44,6 +45,8 @@ const AddFollowUp = ({ onClose, fetchFollowups, patientId }) => {
     let data = {
       patientId: selectedPatient.patientId,
       followUpDate: selectedDate,
+      followUpNotes: values.followUpNotes || "",
+      prescription: values.prescription || "",
     };
 
     let user = await JSON.parse(localStorage.getItem("user"));
@@ -87,6 +90,21 @@ const AddFollowUp = ({ onClose, fetchFollowups, patientId }) => {
           style={{ width: "100%" }}
           placeholder="Next Visit Date"
         />
+      </Form.Item>
+
+      <Form.Item
+        name="followUpNotes"
+        label="Follow-up Notes"
+        rules={[{ required: true, message: "Please enter follow-up notes" }]}
+      >
+        <TextArea rows={4} placeholder="Enter follow-up notes..." />
+      </Form.Item>
+
+      <Form.Item
+        name="prescription"
+        label="Prescription"
+      >
+        <TextArea rows={4} placeholder="Enter prescription..." />
       </Form.Item>
 
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>

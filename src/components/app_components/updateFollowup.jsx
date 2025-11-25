@@ -10,6 +10,7 @@ const UpdateFollowUp = ({ _id, onClose, fetchFollowups }) => {
     const handleSubmit = async (values) => {
         const data = {
             followUpNotes: values.followUpNotes,
+            prescription: values.prescription || "",
         };
         console.log(`id: ${_id}`)
         let user = await JSON.parse(localStorage.getItem("user"));
@@ -30,7 +31,14 @@ const UpdateFollowUp = ({ _id, onClose, fetchFollowups }) => {
             label="Follow-up Notes"
             rules={[{ required: true, message: "Please enter follow-up notes" }]}
         >
-            <TextArea rows={4} placeholder="Enter notes..." />
+            <TextArea rows={4} placeholder="Enter follow-up notes..." />
+        </Form.Item>
+
+        <Form.Item
+            name="prescription"
+            label="Prescription"
+        >
+            <TextArea rows={4} placeholder="Enter prescription..." />
         </Form.Item>
 
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>

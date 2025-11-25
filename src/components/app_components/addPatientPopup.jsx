@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Input, Select, Button, Steps, Row, Col, DatePicker } from "antd";
 import { addPatient } from "../../api/patients_api";
+import { getAllDoctors } from "../../api/doctor_api";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import TextArea from "antd/es/input/TextArea";
@@ -10,18 +11,32 @@ const { Step } = Steps;
 const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
   const [current, setCurrent] = useState(0);
   let [user, setUser] = useState({});
+  const [doctors, setDoctors] = useState([]);
   const [formValues, setFormValues] = useState({
-    doctor: "Mohasina",
+    doctor: undefined,
     dateOfCase: dayjs(),
   });
 
   useEffect(() => {
     getLocalData();
+    fetchDoctors();
   }, []);
 
   const getLocalData = async () => {
     const userData = await JSON.parse(localStorage.getItem("user"));
     setUser(userData);
+  };
+
+  const fetchDoctors = async () => {
+    try {
+      const localUser = JSON.parse(localStorage.getItem("user"));
+      const response = await getAllDoctors(localUser?.secretKey);
+      if (response && response.success) {
+        setDoctors(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching doctors:", error);
+    }
   };
 
   const updateField = (field, value) => {
@@ -59,6 +74,7 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
             hair: formValues.hair,
             nail: formValues.nail,
             face: formValues.face,
+            habits: formValues.habits,
           },
           digestion: {
             appetite: formValues.appetite,
@@ -75,6 +91,11 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
           },
         },
         lifeSpace: formValues.lifeSpace,
+        sleep: formValues.sleep,
+        dreams: formValues.dreams,
+        thermals: formValues.thermals,
+        diagnosis: formValues.diagnosis,
+        prescription: formValues.prescription,
       };
 
       // Conditionally add optional fields
@@ -121,12 +142,24 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
         payload.patientAsPerson.sexualFunctions = formValues.sexualFunctions;
       }
 
-      if (formValues.thermals) {
-        payload.thermals = formValues.thermals;
+      if (!formValues.thermals) {
+        delete payload.thermals;
       }
 
-      if (formValues.diagnosis) {
-        payload.diagnosis = formValues.diagnosis;
+      if (!formValues.diagnosis) {
+        delete payload.diagnosis;
+      }
+
+      if (!formValues.prescription) {
+        delete payload.prescription;
+      }
+
+      if (!formValues.sleep) {
+        delete payload.sleep;
+      }
+
+      if (!formValues.dreams) {
+        delete payload.dreams;
       }
 
       console.log(payload);
@@ -230,10 +263,19 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
           </Row>
           <Row style={{ marginBottom: 16 }} gutter={16}>
             <Col span={8}>
-              <Input
-                placeholder="Doctor"
-                value={formValues.doctor || "Mohasina"}
-                onChange={(e) => updateField("doctor", e.target.value)}
+              <Select
+                placeholder="Select Doctor"
+                value={formValues.doctor}
+                onChange={(value) => updateField("doctor", value)}
+                style={{ width: "100%" }}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                }
+                options={doctors.map((doctor) => ({
+                  value: doctor.name,
+                  label: doctor.name,
+                }))}
               />
             </Col>
             <Col span={8}>
@@ -336,6 +378,13 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
                 placeholder="Face"
                 value={formValues.face}
                 onChange={(e) => updateField("face", e.target.value)}
+              />
+            </Col>
+            <Col span={8}>
+              <Input
+                placeholder="Habits"
+                value={formValues.habits}
+                onChange={(e) => updateField("habits", e.target.value)}
               />
             </Col>
           </Row>
@@ -545,11 +594,32 @@ const PatientRegistrationForm = ({ onFinish, fetchPatients }) => {
       title: "Other Details",
       content: (
         <>
-          <Col style={{ marginBottom: "20px" }}>
+          <Col style={{ marginBottom: 20 }}>
             <TextArea
               placeholder="Life Space"
               value={formValues.lifeSpace}
               onChange={(e) => updateField("lifeSpace", e.target.value)}
+            />
+          </Col>
+          <Col style={{ marginBottom: 20 }}>
+            <TextArea
+              placeholder="Sleep"
+              value={formValues.sleep}
+              onChange={(e) => updateField("sleep", e.target.value)}
+            />
+          </Col>
+          <Col style={{ marginBottom: 20 }}>
+            <TextArea
+              placeholder="Dreams"
+              value={formValues.dreams}
+              onChange={(e) => updateField("dreams", e.target.value)}
+            />
+          </Col>
+          <Col style={{ marginBottom: 20 }}>
+            <TextArea
+              placeholder="Prescription"
+              value={formValues.prescription}
+              onChange={(e) => updateField("prescription", e.target.value)}
             />
           </Col>
           <Row gutter={16}>

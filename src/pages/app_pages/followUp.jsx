@@ -38,6 +38,7 @@ const FollowUp = () => {
         followUpDate: latest.followUpDate,
         lastVisitDate: latest.lastVisitDate,
         followupNotes: latest.followupNotes,
+        prescription: latest.prescription,
         isFirstVisit: latest.isFirstVisit,
       };
       return data;

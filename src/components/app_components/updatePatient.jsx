@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Select, Button, Steps, Row, Col, DatePicker } from 'antd';
 import { updatePatient } from '../../api/patients_api';
+import { getAllDoctors } from '../../api/doctor_api';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
+import TextArea from 'antd/es/input/TextArea';
 
 const { Step } = Steps;
 
 const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
     const [current, setCurrent] = useState(0);
+    const [doctors, setDoctors] = useState([]);
     const [formValues, setFormValues] = useState(() => {
         const p = patient || {};
         const prelim = (p.priliminaryDetails && p.priliminaryDetails[0]) || {};
@@ -24,7 +27,7 @@ const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
             religion: prelim.religion || "",
             monthlyIncome: prelim.monthlyIncome || "",
             address: prelim.address || "",
-            doctor: prelim.doctor || "Mohasina",
+            doctor: prelim.doctor || "",
             dateOfCase: prelim.dateOfCase ? dayjs(prelim.dateOfCase) : dayjs(),
             mobileNumber: prelim.mobileNumber || "",
 
@@ -38,6 +41,7 @@ const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
             hair: p.patientAsPerson?.appearance?.hair || "",
             nail: p.patientAsPerson?.appearance?.nail || "",
             face: p.patientAsPerson?.appearance?.face || "",
+            habits: p.patientAsPerson?.appearance?.habits || "",
 
             appetite: p.patientAsPerson?.digestion?.appetite || "",
             diet: p.patientAsPerson?.digestion?.diet || "",
@@ -70,11 +74,29 @@ const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
             sexualFunctions: p.patientAsPerson?.sexualFunctions || "",
 
             lifeSpace: p.lifeSpace || "",
+            sleep: p.sleep || "",
+            dreams: p.dreams || "",
             thermals: p.thermals || "",
-            diagnosis: p.diagnosis || ""
+            diagnosis: p.diagnosis || "",
+            prescription: p.prescription || "",
         };
     });
 
+    useEffect(() => {
+        fetchDoctors();
+    }, []);
+
+    const fetchDoctors = async () => {
+        try {
+            const localUser = JSON.parse(localStorage.getItem("user"));
+            const response = await getAllDoctors(localUser?.secretKey);
+            if (response && response.success) {
+                setDoctors(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching doctors:", error);
+        }
+    };
 
     const updateField = (field, value) => {
         setFormValues(prev => ({ ...prev, [field]: value }));
@@ -110,7 +132,8 @@ const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
                 skin: formValues.skin,
                 hair: formValues.hair,
                 nail: formValues.nail,
-                face: formValues.face
+                face: formValues.face,
+                habits: formValues.habits
             },
             digestion: {
                 appetite: formValues.appetite,
@@ -148,8 +171,11 @@ const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
             sexualFunctions: formValues.sexualFunctions
             },
             lifeSpace: formValues.lifeSpace,
+            sleep: formValues.sleep,
+            dreams: formValues.dreams,
             thermals: formValues.thermals,
-            diagnosis: formValues.diagnosis
+            diagnosis: formValues.diagnosis,
+            prescription: formValues.prescription
         };
 
         const user = JSON.parse(localStorage.getItem('user'));
@@ -190,7 +216,22 @@ const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
                     <Col span={8}><Input placeholder="Address" value={formValues.address} onChange={e => updateField('address', e.target.value)} /></Col>
                 </Row>
                 <Row style={{ marginBottom: 16 }}  gutter={16}>
-                    <Col span={8}><Input placeholder="Doctor" value={formValues.doctor || "Mohasina"} onChange={e => updateField('doctor', e.target.value)} /></Col>
+                    <Col span={8}>
+                        <Select
+                            placeholder="Select Doctor"
+                            value={formValues.doctor}
+                            onChange={(value) => updateField('doctor', value)}
+                            style={{ width: '100%' }}
+                            showSearch
+                            filterOption={(input, option) =>
+                                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                            }
+                            options={doctors.map((doctor) => ({
+                                value: doctor.name,
+                                label: doctor.name,
+                            }))}
+                        />
+                    </Col>
                     <Col span={8}><DatePicker style={{ width: '100%' }} placeholder="Date of Case" value={formValues.dateOfCase ? dayjs(formValues.dateOfCase) : dayjs()} onChange={(_, dateString) => updateField('dateOfCase', dateString)} /></Col>
                     <Col span={8}><Input placeholder="Mobile Number" value={formValues.mobileNumber} onChange={e => updateField('mobileNumber', e.target.value)} /></Col>
                 </Row>
@@ -220,6 +261,7 @@ const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
                 <Row gutter={16}  style={{ marginBottom: 10 }} >
                     <Col span={8}><Input placeholder="Nail" value={formValues.nail} onChange={e => updateField('nail', e.target.value)} /></Col>
                     <Col span={8}><Input placeholder="Face" value={formValues.face} onChange={e => updateField('face', e.target.value)} /></Col>
+                    <Col span={8}><Input placeholder="Habits" value={formValues.habits} onChange={e => updateField('habits', e.target.value)} /></Col>
                 </Row>
                 <p style={{fontSize: "1rem", color: "grey"}}>Digestion</p>
                 <Row gutter={16} style={{ marginBottom: 10 }} >
@@ -276,11 +318,24 @@ const UpdatePatient = ({patient, onFinish, fetchPatients }) => {
         {
         title: 'Other Details',
         content: (
-            <Row gutter={16}>
-            <Col span={8}><Input placeholder="Life Space" value={formValues.lifeSpace} onChange={e => updateField('lifeSpace', e.target.value)} /></Col>
-            <Col span={8}><Input placeholder="Thermals" value={formValues.thermals} onChange={e => updateField('thermals', e.target.value)} /></Col>
-            <Col span={8}><Input placeholder="Diagnosis" value={formValues.diagnosis} onChange={e => updateField('diagnosis', e.target.value)} /></Col>
-            </Row>
+            <>
+                <Col style={{ marginBottom: 16 }} span={24}>
+                    <TextArea placeholder="Life Space" value={formValues.lifeSpace} onChange={e => updateField('lifeSpace', e.target.value)} />
+                </Col>
+                <Col style={{ marginBottom: 16 }} span={24}>
+                    <TextArea placeholder="Sleep" value={formValues.sleep} onChange={e => updateField('sleep', e.target.value)} />
+                </Col>
+                <Col style={{ marginBottom: 16 }} span={24}>
+                    <TextArea placeholder="Dreams" value={formValues.dreams} onChange={e => updateField('dreams', e.target.value)} />
+                </Col>
+                <Col style={{ marginBottom: 16 }} span={24}>
+                    <TextArea placeholder="Prescription" value={formValues.prescription} onChange={e => updateField('prescription', e.target.value)} />
+                </Col>
+                <Row gutter={16}>
+                    <Col span={12}><Input placeholder="Thermals" value={formValues.thermals} onChange={e => updateField('thermals', e.target.value)} /></Col>
+                    <Col span={12}><Input placeholder="Diagnosis" value={formValues.diagnosis} onChange={e => updateField('diagnosis', e.target.value)} /></Col>
+                </Row>
+            </>
         )
         }
     ];
